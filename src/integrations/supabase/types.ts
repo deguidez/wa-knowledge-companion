@@ -218,6 +218,27 @@ export type Database = {
         }
         Returns: boolean
       }
+      webhook_ingest: {
+        Args: {
+          _body: string
+          _external_id: string
+          _name: string
+          _payload: Json
+          _phone: string
+          _token: string
+        }
+        Returns: Json
+      }
+      webhook_record_reply: {
+        Args: {
+          _body: string
+          _conversation_id: string
+          _error: string
+          _status: string
+          _token: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin"
