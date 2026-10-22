@@ -14,7 +14,7 @@
 - [x] Testar verificações do instalador e entregar arquivo com instruções — quatro testes passaram; execução real depende da VPS.
 
 # Atendimento pelo Lovable
-- [ ] Fazer “sair” no WhatsApp reiniciar a escolha da empresa e verificar isolamento.
+- [x] Fazer “sair” no WhatsApp reiniciar a escolha da empresa — verificado na função real, com menu e contexto anterior excluído.
 - [x] Verificar configuração e falhas recentes da Evolution e IA — conexão aberta e teste da IA respondeu.
 - [x] Corrigir entrega da Evolution para o Lovable — somente MESSAGES_UPSERT, por eventos e Base64 desligados; configuração conferida após salvar.
-- [ ] Confirmar mensagem real recebida e resposta no WhatsApp — aguarda envio pelo usuário de outro celular.
+- [x] Confirmar mensagem real recebida e resposta no WhatsApp — mensagens recebidas e respostas enviadas com sucesso em 22/10.
