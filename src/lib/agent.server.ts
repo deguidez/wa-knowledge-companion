@@ -81,6 +81,14 @@ export async function callAI(
     url = "https://ai.gateway.lovable.dev/v1/chat/completions";
     headers = { Authorization: `Bearer ${key}`, "X-Lovable-AIG-SDK": "fetch" };
     model = "google/gemini-3-flash-preview";
+  } else if (s.ai_provider === 'ollama') {
+    const base = new URL(s.ai_base_url || 'http://127.0.0.1:11434/v1');
+    if (!['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname)) {
+      throw new Error('Ollama deve usar o endereço local da VPS (127.0.0.1).');
+    }
+    url = base.toString().replace(/\/+$/, '') + '/chat/completions';
+    headers = {};
+    model = s.ai_model || 'llama3.2:3b';
   } else {
     if (!s.ai_api_key) throw new Error("Chave da IA não configurada");
     url = s.ai_base_url.replace(/\/+$/, "") + "/chat/completions";

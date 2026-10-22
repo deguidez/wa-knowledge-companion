@@ -17,3 +17,4 @@
 - WhatsApp provider (Evolution or YCloud) is chosen in settings; one webhook route detects either payload format and `sendWhatsApp` dispatches.
 - AI calls use OpenAI-compatible `/chat/completions` so any provider key works; built-in AI needs `LOVABLE_API_KEY` in the env.
 - Company routing is stored in settings.routing_flow; token-checked ingest RPC selects the company and filters knowledge/history by that company and selection timestamp, preventing cross-company context. Unassigned legacy knowledge is excluded until classified.
+- Ollama uses the existing OpenAI-compatible client without API credentials, restricted to loopback on the app host so the local model is not exposed publicly; other provider configurations remain unchanged.
