@@ -4,4 +4,6 @@
 - [x] Criar tela de fluxo e conectar ao WhatsApp.
 - [x] Testar seleção, isolamento e edição.
 - [x] Explicar IA própria sem créditos OpenAI.
-- [ ] Identificar capacidade da VPS — aguarda memória, processador e disponibilidade de GPU informados pelo usuário.
+- [x] Identificar capacidade da VPS — 16 GB de RAM e 4 CPUs; GPU não informada.
+- [ ] Adicionar opção Ollama sem chave e testar conexão compatível local.
+- [ ] Documentar instalação segura na VPS; execução real aguarda instalação pelo usuário.
