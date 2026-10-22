@@ -47,13 +47,13 @@ function KeysPage() {
     setSaving(true);
     try {
       await saveSettings({
-        evolution_url: form.evolution_url?.trim(),
-        evolution_api_key: form.evolution_api_key?.trim(),
-        evolution_instance: form.evolution_instance?.trim(),
-        ai_provider: form.ai_provider,
-        ai_base_url: form.ai_base_url?.trim(),
-        ai_api_key: form.ai_api_key?.trim(),
-        ai_model: form.ai_model?.trim(),
+        evolution_url: (form.evolution_url ?? "").trim(),
+        evolution_api_key: (form.evolution_api_key ?? "").trim(),
+        evolution_instance: (form.evolution_instance ?? "").trim(),
+        ai_provider: form.ai_provider ?? "lovable",
+        ai_base_url: (form.ai_base_url ?? "").trim(),
+        ai_api_key: (form.ai_api_key ?? "").trim(),
+        ai_model: (form.ai_model ?? "").trim(),
         ...extra,
       });
       await qc.invalidateQueries({ queryKey: ["settings"] });

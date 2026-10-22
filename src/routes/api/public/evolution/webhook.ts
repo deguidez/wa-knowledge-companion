@@ -23,8 +23,9 @@ const Payload = z.object({
     .passthrough(),
 });
 
-function extractText(msg: Record<string, any> | null | undefined): string | null {
-  if (!msg) return null;
+function extractText(m: Record<string, any> | null | undefined): string | null {
+  if (!m) return null;
+  const msg = m as any;
   return (
     msg.conversation ??
     msg.extendedTextMessage?.text ??
@@ -56,7 +57,7 @@ export const Route = createFileRoute("/api/public/evolution/webhook")({
         if (key.fromMe || !key.remoteJid.endsWith("@s.whatsapp.net")) return Response.json({ ignored: true });
         const text = extractText(message);
         if (!text?.trim()) return Response.json({ ignored: true });
-        const phone = key.remoteJid.split("@")[0];
+        const phone = key.remoteJid.split("@")[0] ?? "";
 
         const { url, key: pk } = publicSupabase();
         const sb = createClient<Database>(url, pk, {
