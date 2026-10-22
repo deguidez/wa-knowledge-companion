@@ -12,3 +12,7 @@
 # Instalador para aaPanel
 - [x] Preparar instalador do aplicativo e Ollama, com acesso local e sem chaves privadas.
 - [x] Testar verificações do instalador e entregar arquivo com instruções — quatro testes passaram; execução real depende da VPS.
+
+# Atendimento pelo Lovable
+- [ ] Verificar configuração e falhas recentes da Evolution e IA.
+- [ ] Corrigir falhas confirmadas e testar recebimento e resposta no painel.
