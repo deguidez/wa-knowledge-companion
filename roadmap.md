@@ -8,3 +8,7 @@
 - [x] Adicionar opção Ollama sem chave e verificar pedido compatível e tela de configuração.
 - [x] Documentar instalação segura na VPS.
 - [ ] Validar respostas do Ollama real — aguarda instalação pelo usuário na VPS; sem acesso ao servidor nesta conversa.
+
+# Instalador para aaPanel
+- [x] Preparar instalador do aplicativo e Ollama, com acesso local e sem chaves privadas.
+- [x] Testar verificações do instalador e entregar arquivo com instruções — quatro testes passaram; execução real depende da VPS.
