@@ -43,6 +43,13 @@
       "when": 1792637450123,
       "tag": "0005_conversation_inactivity_timeout",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792637673461,
+      "tag": "0006_whatsapp_inactivity_followup",
+      "breakpoints": true
     }
   ]
 }

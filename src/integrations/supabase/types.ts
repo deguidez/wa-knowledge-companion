@@ -20,6 +20,7 @@ export type Database = {
           company: string | null
           company_selected_at: string | null
           created_at: string
+          followup_claimed_for: string | null
           id: string
           last_client_message_at: string | null
           last_message_at: string
@@ -31,6 +32,7 @@ export type Database = {
           company?: string | null
           company_selected_at?: string | null
           created_at?: string
+          followup_claimed_for?: string | null
           id?: string
           last_client_message_at?: string | null
           last_message_at?: string
@@ -42,6 +44,7 @@ export type Database = {
           company?: string | null
           company_selected_at?: string | null
           created_at?: string
+          followup_claimed_for?: string | null
           id?: string
           last_client_message_at?: string | null
           last_message_at?: string
@@ -139,6 +142,7 @@ export type Database = {
           evolution_api_key: string
           evolution_instance: string
           evolution_url: string
+          followup_enabled: boolean
           id: number
           routing_flow: Json
           system_prompt: string
@@ -159,6 +163,7 @@ export type Database = {
           evolution_api_key?: string
           evolution_instance?: string
           evolution_url?: string
+          followup_enabled?: boolean
           id?: number
           routing_flow?: Json
           system_prompt?: string
@@ -179,6 +184,7 @@ export type Database = {
           evolution_api_key?: string
           evolution_instance?: string
           evolution_url?: string
+          followup_enabled?: boolean
           id?: number
           routing_flow?: Json
           system_prompt?: string
@@ -246,6 +252,11 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      webhook_claim_followups: { Args: { _token: string }; Returns: Json }
+      webhook_followup_current: {
+        Args: { _client_at: string; _conversation_id: string; _token: string }
         Returns: boolean
       }
       webhook_ingest: {

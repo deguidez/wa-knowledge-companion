@@ -15,7 +15,8 @@
 
 # Atendimento pelo Lovable
 - [x] Adicionar tempo editável de inatividade (2 minutos) — painel salva e lê; conversa ativa em 90s e reiniciada em 121s, sem contexto anterior.
-- [ ] Perguntar se precisa de mais ajuda após 30 segundos sem resposta — aguarda decisão sobre atraso de até 60s e custo das verificações no Lovable.
+- [x] Implementar lembrete único após 30 segundos, com verificação a cada minuto aceita pelo usuário; testes 29s/31s, duplicidade e encerramento passaram.
+- [ ] Verificar envio real do lembrete agendado — depende de publicar a nova página de recebimento e receber mensagem real no WhatsApp.
 - [x] Fazer “sair” no WhatsApp reiniciar a escolha da empresa — verificado na função real, com menu e contexto anterior excluído.
 - [x] Verificar configuração e falhas recentes da Evolution e IA — conexão aberta e teste da IA respondeu.
 - [x] Corrigir entrega da Evolution para o Lovable — somente MESSAGES_UPSERT, por eventos e Base64 desligados; configuração conferida após salvar.

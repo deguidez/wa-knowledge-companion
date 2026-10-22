@@ -18,6 +18,7 @@ import { Route as AuthenticatedConhecimentoRouteImport } from './routes/_authent
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedFluxoRouteImport } from './routes/_authenticated/fluxo'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution/webhook'
+import { Route as ApiPublicJobsWhatsappFollowupsRouteImport } from './routes/api/public/jobs/whatsapp-followups'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -65,6 +66,12 @@ const ApiPublicEvolutionWebhookRoute =
     path: '/api/public/evolution/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicJobsWhatsappFollowupsRoute =
+  ApiPublicJobsWhatsappFollowupsRouteImport.update({
+    id: '/api/public/jobs/whatsapp-followups',
+    path: '/api/public/jobs/whatsapp-followups',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/jobs/whatsapp-followups': typeof ApiPublicJobsWhatsappFollowupsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,6 +93,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/jobs/whatsapp-followups': typeof ApiPublicJobsWhatsappFollowupsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,6 +106,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/jobs/whatsapp-followups': typeof ApiPublicJobsWhatsappFollowupsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/fluxo'
     | '/api/public/evolution/webhook'
+    | '/api/public/jobs/whatsapp-followups'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/fluxo'
     | '/api/public/evolution/webhook'
+    | '/api/public/jobs/whatsapp-followups'
   id:
     | '__root__'
     | '/'
@@ -130,6 +142,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/fluxo'
     | '/api/public/evolution/webhook'
+    | '/api/public/jobs/whatsapp-followups'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -137,6 +150,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRoute
+  ApiPublicJobsWhatsappFollowupsRoute: typeof ApiPublicJobsWhatsappFollowupsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEvolutionWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/whatsapp-followups': {
+      id: '/api/public/jobs/whatsapp-followups'
+      path: '/api/public/jobs/whatsapp-followups'
+      fullPath: '/api/public/jobs/whatsapp-followups'
+      preLoaderRoute: typeof ApiPublicJobsWhatsappFollowupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -231,6 +252,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRoute,
+  ApiPublicJobsWhatsappFollowupsRoute: ApiPublicJobsWhatsappFollowupsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
