@@ -107,7 +107,7 @@ export const Route = createFileRoute("/api/public/evolution/webhook")({
         let reply = "";
         try {
           const kb = rankKnowledge(r.knowledge as KnowledgeDoc[], history.filter((h) => h.direction === "in").slice(-3).map((h) => h.body).join(" "));
-          reply = await callAI(settings, kb, history);
+          reply = typeof r.direct_reply === "string" ? r.direct_reply : await callAI(settings, kb, history);
           await sendWhatsApp(settings, phone, reply);
           await sb.rpc("webhook_record_reply", { _token: token, _conversation_id: r.conversation_id, _body: reply, _status: "ok", _error: null as any });
         } catch (e) {

@@ -16,3 +16,4 @@
 - File text extraction (PDF/DOCX) runs in the browser; server only fetches URLs.
 - WhatsApp provider (Evolution or YCloud) is chosen in settings; one webhook route detects either payload format and `sendWhatsApp` dispatches.
 - AI calls use OpenAI-compatible `/chat/completions` so any provider key works; built-in AI needs `LOVABLE_API_KEY` in the env.
+- Company routing is stored in settings.routing_flow; token-checked ingest RPC selects the company and filters knowledge/history by that company and selection timestamp, preventing cross-company context. Unassigned legacy knowledge is excluded until classified.
