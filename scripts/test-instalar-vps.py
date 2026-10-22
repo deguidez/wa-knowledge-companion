@@ -22,6 +22,7 @@ class InstallerTests(unittest.TestCase):
         return subprocess.run(
             ["bash", str(INSTALLER), "--check", str(self.project)],
             text=True, capture_output=True,
+            env={k: v for k, v in os.environ.items() if not k.startswith("VITE_SUPABASE_")},
         )
 
     def prepare_project(self):
