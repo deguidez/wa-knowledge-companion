@@ -13,7 +13,7 @@ app_dir="${1:-$PWD}"
 app_dir="$(realpath "$app_dir")"
 [[ -f "$app_dir/package.json" && -f "$app_dir/vite.config.ts" && -f "$app_dir/scripts/ecosystem.config.cjs" ]] || fail 'Envie o projeto completo e atualizado para essa pasta antes de instalar.'
 [[ -f "$app_dir/.env" ]] || fail 'Falta o arquivo .env do projeto. Não envie seu conteúdo no chat.'
-for cmd in node npm curl systemctl; do
+for cmd in node npm curl; do
   command -v "$cmd" >/dev/null || fail "Falta $cmd. No aaPanel, ative Node 22 no terminal; este instalador exige Linux com systemd."
 done
 node -e 'if (+process.versions.node.split(".")[0] < 22) process.exit(1)' || fail 'Ative Node.js 22 ou superior no terminal do aaPanel.'
@@ -21,6 +21,7 @@ node --env-file="$app_dir/.env" -e '
   const keys = ["VITE_SUPABASE_URL", "VITE_SUPABASE_PUBLISHABLE_KEY", "VITE_SUPABASE_PROJECT_ID"];
   if (keys.some(k => !process.env[k] || process.env[k].includes("..."))) process.exit(1);
 ' || fail 'As configurações públicas do Lovable Cloud estão ausentes ou incompletas no .env. Use o arquivo original do projeto.'
+command -v systemctl >/dev/null || fail 'Este instalador exige Linux com systemd.'
 [[ -d /run/systemd/system ]] || fail 'Este servidor precisa executar systemd para manter os serviços ligados.'
 printf '\nVerificações do projeto concluídas. Aplicativo: %s\n' "$app_dir"
 if "$check_only"; then
