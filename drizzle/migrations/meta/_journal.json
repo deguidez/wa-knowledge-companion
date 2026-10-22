@@ -36,6 +36,13 @@
       "when": 1792637253825,
       "tag": "0004_whatsapp_sair_resets_company",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792637450123,
+      "tag": "0005_conversation_inactivity_timeout",
+      "breakpoints": true
     }
   ]
 }

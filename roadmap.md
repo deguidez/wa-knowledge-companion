@@ -14,6 +14,8 @@
 - [x] Testar verificações do instalador e entregar arquivo com instruções — quatro testes passaram; execução real depende da VPS.
 
 # Atendimento pelo Lovable
+- [x] Adicionar tempo editável de inatividade (2 minutos) — painel salva e lê; conversa ativa em 90s e reiniciada em 121s, sem contexto anterior.
+- [ ] Perguntar se precisa de mais ajuda após 30 segundos sem resposta — aguarda decisão sobre atraso de até 60s e custo das verificações no Lovable.
 - [x] Fazer “sair” no WhatsApp reiniciar a escolha da empresa — verificado na função real, com menu e contexto anterior excluído.
 - [x] Verificar configuração e falhas recentes da Evolution e IA — conexão aberta e teste da IA respondeu.
 - [x] Corrigir entrega da Evolution para o Lovable — somente MESSAGES_UPSERT, por eventos e Base64 desligados; configuração conferida após salvar.

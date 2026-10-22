@@ -21,6 +21,7 @@ export type Database = {
           company_selected_at: string | null
           created_at: string
           id: string
+          last_client_message_at: string | null
           last_message_at: string
           name: string | null
           phone: string
@@ -31,6 +32,7 @@ export type Database = {
           company_selected_at?: string | null
           created_at?: string
           id?: string
+          last_client_message_at?: string | null
           last_message_at?: string
           name?: string | null
           phone: string
@@ -41,6 +43,7 @@ export type Database = {
           company_selected_at?: string | null
           created_at?: string
           id?: string
+          last_client_message_at?: string | null
           last_message_at?: string
           name?: string | null
           phone?: string
@@ -132,6 +135,7 @@ export type Database = {
           ai_model: string
           ai_provider: string
           auto_reply: boolean
+          conversation_timeout_minutes: number
           evolution_api_key: string
           evolution_instance: string
           evolution_url: string
@@ -151,6 +155,7 @@ export type Database = {
           ai_model?: string
           ai_provider?: string
           auto_reply?: boolean
+          conversation_timeout_minutes?: number
           evolution_api_key?: string
           evolution_instance?: string
           evolution_url?: string
@@ -170,6 +175,7 @@ export type Database = {
           ai_model?: string
           ai_provider?: string
           auto_reply?: boolean
+          conversation_timeout_minutes?: number
           evolution_api_key?: string
           evolution_instance?: string
           evolution_url?: string

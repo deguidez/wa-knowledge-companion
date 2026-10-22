@@ -17,5 +17,6 @@
 - WhatsApp provider (Evolution or YCloud) is chosen in settings; one webhook route detects either payload format and `sendWhatsApp` dispatches.
 - AI calls use OpenAI-compatible `/chat/completions` so any provider key works; built-in AI needs `LOVABLE_API_KEY` in the env.
 - Company routing is stored in settings.routing_flow; token-checked ingest RPC selects the company and filters knowledge/history by that company and selection timestamp, preventing cross-company context. Unassigned legacy knowledge is excluded until classified.
+- Conversation inactivity uses last_client_message_at, updated only after a nonduplicate inbound message; expired selections reset before routing the next message so outbound replies cannot extend the client session.
 - Ollama uses the existing OpenAI-compatible client without API credentials, restricted to loopback on the app host so the local model is not exposed publicly; other provider configurations remain unchanged.
 - VPS installation is an explicit-confirmation shell workflow in scripts/, with PM2 environment loading from the existing project .env and loopback-only services; it never changes DNS, aaPanel sites, firewall or database settings because these require host-specific configuration.
