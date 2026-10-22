@@ -147,7 +147,7 @@ function KeysPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">Depois de publicar na VPS, use o endereço com https://gpt.evenon.com.br.</p>
+            <p className="text-xs text-muted-foreground">Use o endereço do site onde o bot está funcionando. Na Evolution, ative apenas MESSAGES_UPSERT e desative “Webhook por eventos” e “Webhook Base64”.</p>
           </div>
         </section>
 
