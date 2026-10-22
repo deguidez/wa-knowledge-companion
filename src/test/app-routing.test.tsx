@@ -14,4 +14,8 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it('matches the editable company flow page', () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes('/fluxo').at(-1)?.routeId).toBe('/_authenticated/fluxo');
+  });
 });

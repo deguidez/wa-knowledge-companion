@@ -11,9 +11,12 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { saveSettings, settingsQuery } from "@/lib/settings";
 import { testAgent } from "@/lib/admin.functions";
+import { CompanySelect } from '@/components/CompanySelect';
+import type { Company } from '@/lib/company-flow';
+import { pageHead } from '@/lib/page-head';
 
 export const Route = createFileRoute("/_authenticated/agente")({
-  head: () => ({ meta: [{ title: "Agente — Evenon GPT" }] }),
+  head: () => pageHead('Agente', 'Configure e teste respostas independentes para as empresas Pace 3.'),
   component: AgentPage,
 });
 
@@ -26,6 +29,7 @@ function AgentPage() {
   const [q, setQ] = useState("");
   const [answer, setAnswer] = useState("");
   const [testing, setTesting] = useState(false);
+  const [company, setCompany] = useState<Company>('association');
   const test = useServerFn(testAgent);
 
   useEffect(() => {
@@ -70,6 +74,7 @@ function AgentPage() {
         </section>
         <section className="space-y-4 rounded-2xl border bg-card p-6">
           <h2 className="text-lg font-semibold">Testar agente</h2>
+          <CompanySelect value={company} onChange={c => { setCompany(c); setAnswer(''); }} label="Empresa do teste" />
           <p className="text-sm text-muted-foreground">Faça uma pergunta como se fosse um cliente (salve antes de testar).</p>
           <Textarea rows={3} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Qual o horário de atendimento?" />
           <Button
@@ -78,7 +83,7 @@ function AgentPage() {
               setTesting(true);
               setAnswer("");
               try {
-                const r = await test({ data: { question: q } });
+                const r = await test({ data: { question: q, company } });
                 setAnswer(r.reply);
               } catch (e: any) {
                 toast.error(e.message);

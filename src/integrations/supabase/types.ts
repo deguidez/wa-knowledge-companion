@@ -17,6 +17,8 @@ export type Database = {
       conversations: {
         Row: {
           ai_paused: boolean
+          company: string | null
+          company_selected_at: string | null
           created_at: string
           id: string
           last_message_at: string
@@ -25,6 +27,8 @@ export type Database = {
         }
         Insert: {
           ai_paused?: boolean
+          company?: string | null
+          company_selected_at?: string | null
           created_at?: string
           id?: string
           last_message_at?: string
@@ -33,6 +37,8 @@ export type Database = {
         }
         Update: {
           ai_paused?: boolean
+          company?: string | null
+          company_selected_at?: string | null
           created_at?: string
           id?: string
           last_message_at?: string
@@ -43,6 +49,7 @@ export type Database = {
       }
       knowledge_items: {
         Row: {
+          company: string | null
           content: string
           created_at: string
           file_path: string | null
@@ -52,6 +59,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          company?: string | null
           content?: string
           created_at?: string
           file_path?: string | null
@@ -61,6 +69,7 @@ export type Database = {
           title: string
         }
         Update: {
+          company?: string | null
           content?: string
           created_at?: string
           file_path?: string | null
@@ -74,6 +83,7 @@ export type Database = {
       messages: {
         Row: {
           body: string
+          company: string | null
           conversation_id: string
           created_at: string
           direction: string
@@ -84,6 +94,7 @@ export type Database = {
         }
         Insert: {
           body: string
+          company?: string | null
           conversation_id: string
           created_at?: string
           direction: string
@@ -94,6 +105,7 @@ export type Database = {
         }
         Update: {
           body?: string
+          company?: string | null
           conversation_id?: string
           created_at?: string
           direction?: string
@@ -124,6 +136,7 @@ export type Database = {
           evolution_instance: string
           evolution_url: string
           id: number
+          routing_flow: Json
           system_prompt: string
           updated_at: string
           webhook_token: string
@@ -142,6 +155,7 @@ export type Database = {
           evolution_instance?: string
           evolution_url?: string
           id?: number
+          routing_flow?: Json
           system_prompt?: string
           updated_at?: string
           webhook_token?: string
@@ -160,6 +174,7 @@ export type Database = {
           evolution_instance?: string
           evolution_url?: string
           id?: number
+          routing_flow?: Json
           system_prompt?: string
           updated_at?: string
           webhook_token?: string

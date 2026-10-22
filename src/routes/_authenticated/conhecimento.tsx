@@ -13,9 +13,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { importUrl } from "@/lib/admin.functions";
 import { extractText } from "@/lib/extract";
+import { CompanySelect } from '@/components/CompanySelect';
+import { companyName, type Company } from '@/lib/company-flow';
+import { pageHead } from '@/lib/page-head';
 
 export const Route = createFileRoute("/_authenticated/conhecimento")({
-  head: () => ({ meta: [{ title: "Conhecimento — Evenon GPT" }] }),
+  head: () => pageHead('Conhecimento', 'Conteúdos separados por empresa para o atendimento Pace 3.'),
   component: KnowledgePage,
 });
 
@@ -28,7 +31,7 @@ function KnowledgePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("knowledge_items")
-        .select("id, kind, title, source, file_path, created_at, content")
+        .select("id, kind, title, source, file_path, created_at, content, company")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -41,6 +44,7 @@ function KnowledgePage() {
   const [text, setText] = useState("");
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
+  const [company, setCompany] = useState<Company>('association');
 
   async function run(fn: () => Promise<void>) {
     setBusy(true);
@@ -72,6 +76,7 @@ function KnowledgePage() {
           title: file.name,
           file_path: path,
           content: content.slice(0, 300_000),
+          company,
         });
         if (error) throw error;
         toast.success(`${file.name} adicionado`);
@@ -84,6 +89,7 @@ function KnowledgePage() {
       <PageHeader title="Base de conhecimento" subtitle="Tudo que a IA pode usar para responder seus clientes." />
       <div className="grid gap-6 p-8 max-md:p-4 xl:grid-cols-[minmax(0,420px)_1fr]">
         <section className="rounded-2xl border bg-card p-6">
+          <div className="mb-5 space-y-2"><Label>Empresa do conteúdo</Label><CompanySelect value={company} onChange={setCompany} /></div>
           <Tabs defaultValue="text">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="text">Texto</TabsTrigger>
@@ -103,7 +109,7 @@ function KnowledgePage() {
                 disabled={busy || !title.trim() || !text.trim()}
                 onClick={() =>
                   run(async () => {
-                    const { error } = await supabase.from("knowledge_items").insert({ kind: "text", title, content: text });
+                    const { error } = await supabase.from("knowledge_items").insert({ kind: "text", title, content: text, company });
                     if (error) throw error;
                     setTitle("");
                     setText("");
@@ -123,7 +129,7 @@ function KnowledgePage() {
                 disabled={busy || !url.trim()}
                 onClick={() =>
                   run(async () => {
-                    const r = await doImport({ data: { url: url.trim() } });
+                    const r = await doImport({ data: { url: url.trim(), company } });
                     setUrl("");
                     toast.success(`"${r.title}" importado`);
                   })
@@ -168,6 +174,17 @@ function KnowledgePage() {
                     {it.source ?? it.kind.toUpperCase()} · {it.content.length.toLocaleString("pt-BR")} caracteres
                   </p>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{it.content.slice(0, 240)}</p>
+                  <div className="mt-3 max-w-sm space-y-2">
+                    <p className="text-xs text-muted-foreground">{it.company ? companyName(it.company) : 'Sem empresa · não usado pela IA'}</p>
+                    <CompanySelect label={`Empresa de ${it.title}`} value={it.company === 'events' ? 'events' : 'association'} onChange={c => run(async () => {
+                      const { error } = await supabase.from('knowledge_items').update({ company: c }).eq('id', it.id);
+                      if (error) throw error;
+                    })} />
+                    {!it.company && <Button variant="secondary" size="sm" disabled={busy} onClick={() => run(async () => {
+                      const { error } = await supabase.from('knowledge_items').update({ company }).eq('id', it.id);
+                      if (error) throw error;
+                    })}>Classificar como {companyName(company)}</Button>}
+                  </div>
                 </div>
                 <Button
                   size="icon"

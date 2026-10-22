@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Bot, KeyRound, LogOut, MessageCircle, MessagesSquare } from "lucide-react";
+import { BookOpen, Bot, GitBranch, KeyRound, LogOut, MessageCircle, MessagesSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -17,6 +17,7 @@ const nav = [
   { to: "/dashboard", label: "Conversas", icon: MessagesSquare },
   { to: "/conhecimento", label: "Conhecimento", icon: BookOpen },
   { to: "/agente", label: "Agente", icon: Bot },
+  { to: "/fluxo", label: "Fluxo", icon: GitBranch },
   { to: "/chaves", label: "Chaves de API", icon: KeyRound },
 ] as const;
 

@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { callAI, sendWhatsApp, type AgentSettings } from "@/lib/agent.server";
+import { readFlow } from "@/lib/company-flow";
 
 async function assertAdmin(ctx: { supabase: any; userId: string }) {
   const { data } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
@@ -34,7 +35,7 @@ function htmlToText(html: string) {
 
 export const importUrl = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ url: z.string().url().max(2000) }).parse(i))
+  .inputValidator((i: unknown) => z.object({ url: z.string().url().max(2000), company: z.enum(['association', 'events']) }).parse(i))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const u = new URL(data.url);
@@ -47,18 +48,24 @@ export const importUrl = createServerFn({ method: "POST" })
     if (!content) throw new Error("Nenhum texto encontrado na página");
     const { error } = await context.supabase
       .from("knowledge_items")
-      .insert({ kind: "url", title, source: data.url, content });
+      .insert({ kind: "url", title, source: data.url, content, company: data.company });
     if (error) throw new Error(error.message);
     return { title, chars: content.length };
   });
 
 export const testAgent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => z.object({ question: z.string().min(1).max(2000) }).parse(i))
+  .inputValidator((i: unknown) => z.object({ question: z.string().min(1).max(2000), company: z.enum(['association', 'events']) }).parse(i))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const s = await loadSettings(context.supabase);
-    const { data: kb } = await context.supabase.from("knowledge_items").select("title, content");
+    const { data: saved, error } = await context.supabase.from("settings").select("routing_flow").eq("id", 1).single();
+    if (error) throw new Error(error.message);
+    const branch = readFlow(saved.routing_flow)[data.company];
+    s.company_name = branch.label;
+    s.company_instructions = branch.instructions;
+    const { data: kb, error: kbError } = await context.supabase.from("knowledge_items").select("title, content").eq('company', data.company);
+    if (kbError) throw new Error(kbError.message);
     const { rankKnowledge } = await import("@/lib/agent.server");
     const text = rankKnowledge((kb ?? []) as any, data.question);
     const reply = await callAI(s, text, [{ direction: "in", body: data.question }]);
@@ -75,14 +82,14 @@ export const sendManual = createServerFn({ method: "POST" })
     const s = await loadSettings(context.supabase);
     const { data: conv, error } = await context.supabase
       .from("conversations")
-      .select("phone")
+      .select("phone, company")
       .eq("id", data.conversationId)
       .single();
     if (error) throw new Error(error.message);
     await sendWhatsApp(s, conv.phone, data.text);
     await context.supabase
       .from("messages")
-      .insert({ conversation_id: data.conversationId, direction: "out", body: data.text });
+      .insert({ conversation_id: data.conversationId, direction: "out", body: data.text, company: conv.company });
     await context.supabase
       .from("conversations")
       .update({ last_message_at: new Date().toISOString() })
