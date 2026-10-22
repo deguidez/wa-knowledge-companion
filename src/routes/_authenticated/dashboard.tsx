@@ -11,9 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { sendManual } from "@/lib/admin.functions";
 import { cn } from "@/lib/utils";
+import { companyName } from '@/lib/company-flow';
+import { pageHead } from '@/lib/page-head';
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Conversas — Evenon GPT" }] }),
+  head: () => pageHead('Conversas', 'Histórico e empresa selecionada no atendimento WhatsApp Pace 3.'),
   component: Conversations,
 });
 
@@ -35,10 +37,11 @@ function Conversations() {
     queryKey: ["messages", selected],
     enabled: !!selected,
     queryFn: async () => {
+      if (!selected) return [];
       const { data, error } = await supabase
         .from("messages")
         .select("*")
-        .eq("conversation_id", selected!)
+        .eq("conversation_id", selected)
         .order("created_at", { ascending: true })
         .limit(500);
       if (error) throw error;
@@ -74,6 +77,7 @@ function Conversations() {
               className={cn("block w-full border-b px-4 py-3 text-left transition-colors hover:bg-accent", selected === c.id && "bg-accent")}
             >
               <p className="truncate font-medium">{c.name || c.phone}</p>
+              <p className="truncate text-xs text-primary">{companyName(c.company)}</p>
               <p className="truncate text-xs text-muted-foreground">
                 +{c.phone} · {new Date(c.last_message_at).toLocaleString("pt-BR")}
               </p>
@@ -89,6 +93,7 @@ function Conversations() {
                 <div>
                   <p className="font-semibold">{current.name || current.phone}</p>
                   <p className="text-xs text-muted-foreground">+{current.phone}</p>
+                  <p className="text-xs text-primary">{companyName(current.company)}</p>
                 </div>
                 <label className="flex items-center gap-2 text-sm">
                   IA ativa

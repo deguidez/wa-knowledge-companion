@@ -16,6 +16,7 @@ import { Route as AuthenticatedAgenteRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedChavesRouteImport } from './routes/_authenticated/chaves'
 import { Route as AuthenticatedConhecimentoRouteImport } from './routes/_authenticated/conhecimento'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedFluxoRouteImport } from './routes/_authenticated/fluxo'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFluxoRoute = AuthenticatedFluxoRouteImport.update({
+  id: '/fluxo',
+  path: '/fluxo',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicEvolutionWebhookRoute =
   ApiPublicEvolutionWebhookRouteImport.update({
     id: '/api/public/evolution/webhook',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/chaves': typeof AuthenticatedChavesRoute
   '/conhecimento': typeof AuthenticatedConhecimentoRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/chaves': typeof AuthenticatedChavesRoute
   '/conhecimento': typeof AuthenticatedConhecimentoRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRoutesById {
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/_authenticated/chaves': typeof AuthenticatedChavesRoute
   '/_authenticated/conhecimento': typeof AuthenticatedConhecimentoRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/fluxo': typeof AuthenticatedFluxoRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRouteTypes {
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/chaves'
     | '/conhecimento'
     | '/dashboard'
+    | '/fluxo'
     | '/api/public/evolution/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/chaves'
     | '/conhecimento'
     | '/dashboard'
+    | '/fluxo'
     | '/api/public/evolution/webhook'
   id:
     | '__root__'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/_authenticated/chaves'
     | '/_authenticated/conhecimento'
     | '/_authenticated/dashboard'
+    | '/_authenticated/fluxo'
     | '/api/public/evolution/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -178,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fluxo': {
+      id: '/_authenticated/fluxo'
+      path: '/fluxo'
+      fullPath: '/fluxo'
+      preLoaderRoute: typeof AuthenticatedFluxoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/evolution/webhook': {
       id: '/api/public/evolution/webhook'
       path: '/api/public/evolution/webhook'
@@ -193,6 +212,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChavesRoute: typeof AuthenticatedChavesRoute
   AuthenticatedConhecimentoRoute: typeof AuthenticatedConhecimentoRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFluxoRoute: typeof AuthenticatedFluxoRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -200,6 +220,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChavesRoute: AuthenticatedChavesRoute,
   AuthenticatedConhecimentoRoute: AuthenticatedConhecimentoRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFluxoRoute: AuthenticatedFluxoRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

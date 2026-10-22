@@ -11,9 +11,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { saveSettings, settingsQuery, type Settings } from "@/lib/settings";
 import { testEvolution } from "@/lib/admin.functions";
+import { pageHead } from '@/lib/page-head';
 
 export const Route = createFileRoute("/_authenticated/chaves")({
-  head: () => ({ meta: [{ title: "Chaves de API — Evenon GPT" }] }),
+  head: () => pageHead('Chaves de API', 'Conexões WhatsApp e IA do atendimento Evenon GPT.'),
   component: KeysPage,
 });
 
