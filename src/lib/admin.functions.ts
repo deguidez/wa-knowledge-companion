@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { callAI, sendEvolution, type AgentSettings } from "@/lib/agent.server";
+import { callAI, sendWhatsApp, type AgentSettings } from "@/lib/agent.server";
 
 async function assertAdmin(ctx: { supabase: any; userId: string }) {
   const { data } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
@@ -79,7 +79,7 @@ export const sendManual = createServerFn({ method: "POST" })
       .eq("id", data.conversationId)
       .single();
     if (error) throw new Error(error.message);
-    await sendEvolution(s, conv.phone, data.text);
+    await sendWhatsApp(s, conv.phone, data.text);
     await context.supabase
       .from("messages")
       .insert({ conversation_id: data.conversationId, direction: "out", body: data.text });
@@ -95,6 +95,15 @@ export const testEvolution = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const s = await loadSettings(context.supabase);
+    if (s.whatsapp_provider === "ycloud") {
+      if (!s.ycloud_api_key) throw new Error("Preencha a API Key da YCloud");
+      const r = await fetch("https://api.ycloud.com/v2/whatsapp/phoneNumbers?limit=10", { headers: { "X-API-Key": s.ycloud_api_key } });
+      const b = await r.text();
+      if (!r.ok) throw new Error(`YCloud respondeu ${r.status}: ${b.slice(0, 200)}`);
+      let n = 0;
+      try { n = JSON.parse(b)?.items?.length ?? 0; } catch {}
+      return { state: `YCloud ok (${n} número(s))` };
+    }
     if (!s.evolution_url || !s.evolution_api_key || !s.evolution_instance)
       throw new Error("Preencha URL, chave e instância");
     const res = await fetch(

@@ -6,7 +6,7 @@ import {
   callAI,
   publicSupabase,
   rankKnowledge,
-  sendEvolution,
+  sendWhatsApp,
   type AgentSettings,
   type HistoryItem,
   type KnowledgeDoc,
@@ -49,15 +49,29 @@ export const Route = createFileRoute("/api/public/evolution/webhook")({
         } catch {
           return new Response("bad json", { status: 400 });
         }
-        const parsed = Payload.safeParse(raw);
-        const evt = (raw as any)?.event?.toString().toLowerCase().replace("_", ".");
-        if (!parsed.success || (evt && evt !== "messages.upsert")) return Response.json({ ignored: true });
-
-        const { key, pushName, message } = parsed.data.data;
-        if (key.fromMe || !key.remoteJid.endsWith("@s.whatsapp.net")) return Response.json({ ignored: true });
-        const text = extractText(message);
-        if (!text?.trim()) return Response.json({ ignored: true });
-        const phone = key.remoteJid.split("@")[0] ?? "";
+        let phone = "", text: string | null = null, extId = "", pushName: string | null | undefined = null;
+        const y = raw as any;
+        if (typeof y?.type === "string" && y.type.startsWith("whatsapp.")) {
+          // YCloud
+          if (y.type !== "whatsapp.inbound_message.received") return Response.json({ ignored: true });
+          const m = y.whatsappInboundMessage;
+          if (!m?.from || !m?.id) return Response.json({ ignored: true });
+          text = m.text?.body ?? m.image?.caption ?? m.video?.caption ?? m.document?.caption ?? m.button?.text ?? m.interactive?.button_reply?.title ?? m.interactive?.list_reply?.title ?? null;
+          phone = String(m.from).replace(/\D/g, "");
+          extId = "yc:" + m.id;
+          pushName = m.customerProfile?.name;
+        } else {
+          const parsed = Payload.safeParse(raw);
+          const evt = y?.event?.toString().toLowerCase().replace("_", ".");
+          if (!parsed.success || (evt && evt !== "messages.upsert")) return Response.json({ ignored: true });
+          const { key, message } = parsed.data.data;
+          if (key.fromMe || !key.remoteJid.endsWith("@s.whatsapp.net")) return Response.json({ ignored: true });
+          text = extractText(message);
+          phone = key.remoteJid.split("@")[0] ?? "";
+          extId = key.id;
+          pushName = parsed.data.data.pushName;
+        }
+        if (!text?.trim() || !phone) return Response.json({ ignored: true });
 
         const { url, key: pk } = publicSupabase();
         const sb = createClient<Database>(url, pk, {
@@ -77,7 +91,7 @@ export const Route = createFileRoute("/api/public/evolution/webhook")({
           _phone: phone,
           _name: pushName ?? "",
           _body: text.slice(0, 8000),
-          _external_id: key.id,
+          _external_id: extId,
           _payload: raw as any,
         });
         if (error) {
@@ -94,7 +108,7 @@ export const Route = createFileRoute("/api/public/evolution/webhook")({
         try {
           const kb = rankKnowledge(r.knowledge as KnowledgeDoc[], history.filter((h) => h.direction === "in").slice(-3).map((h) => h.body).join(" "));
           reply = await callAI(settings, kb, history);
-          await sendEvolution(settings, phone, reply);
+          await sendWhatsApp(settings, phone, reply);
           await sb.rpc("webhook_record_reply", { _token: token, _conversation_id: r.conversation_id, _body: reply, _status: "ok", _error: null as any });
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e);
