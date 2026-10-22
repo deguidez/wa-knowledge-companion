@@ -50,3 +50,47 @@ Na Evolution: Webhook → habilitado, cole a URL, evento **MESSAGES_UPSERT**.
 ```bash
 git pull && npm install && NITRO_PRESET=node-server npm run build && pm2 restart evenon-gpt
 ```
+
+## 9. IA própria com Ollama (sem créditos OpenAI)
+
+Para a VPS informada de **16 GB de RAM e 4 CPUs**, comece testando `llama3.2:3b`. A capacidade real depende da RAM livre, CPU e outros serviços; sem GPU, respostas podem demorar e não há garantia para vários clientes simultâneos. Compare respostas em português e informações das duas empresas antes de ativar atendimento automático.
+
+No terminal da VPS Linux, instale pelo instalador oficial (revise o script antes de executar):
+```bash
+curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh
+less /tmp/install-ollama.sh
+sh /tmp/install-ollama.sh
+ollama pull llama3.2:3b
+```
+
+Mantenha Ollama acessível **somente na própria VPS**. Não abra a porta 11434 no firewall nem crie proxy público para ela. Na instalação como serviço systemd:
+```bash
+sudo systemctl edit ollama.service
+```
+Adicione:
+```ini
+[Service]
+Environment="OLLAMA_HOST=127.0.0.1:11434"
+Environment="OLLAMA_NUM_PARALLEL=1"
+Environment="OLLAMA_MAX_LOADED_MODELS=1"
+```
+Depois:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+curl http://127.0.0.1:11434/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"llama3.2:3b","messages":[{"role":"user","content":"Responda em português: olá!"}]}'
+```
+
+No painel hospedado na VPS, **Chaves de API → Inteligência artificial**:
+- Provedor: **Ollama · IA na sua VPS**.
+- URL base: `http://127.0.0.1:11434/v1`.
+- Modelo: `llama3.2:3b`.
+- Não precisa de chave de IA. Salve e teste cada empresa na tela Agente.
+
+O endereço local aponta para o servidor que executa o painel: esta configuração não alcança sua VPS a partir da prévia Lovable. Não alteramos a escolha atual de IA automaticamente.
+
+As respostas locais não usam OpenAI ou Lovable AI e não têm cobrança por token dessas plataformas. **VPS, WhatsApp/YCloud/Meta e Lovable Cloud (login, dados e arquivos) continuam sendo serviços separados**; isto não migra o banco ou login para sua VPS. O menu inicial e mensagens das opções são determinísticos e já dispensam chamadas de IA.
+
+Documentação oficial: https://docs.ollama.com/linux · https://docs.ollama.com/api/openai-compatibility · https://docs.ollama.com/faq · https://ollama.com/library/llama3.2:3b

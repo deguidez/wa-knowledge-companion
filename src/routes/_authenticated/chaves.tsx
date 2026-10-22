@@ -154,11 +154,12 @@ function KeysPage() {
         <section className="space-y-4 rounded-2xl border bg-card p-6">
           <h2 className="text-lg font-semibold">Inteligência artificial</h2>
           <Field label="Provedor">
-            <Select value={form.ai_provider ?? "lovable"} onValueChange={(v) => setForm((f) => ({ ...f, ai_provider: v }))}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select value={form.ai_provider ?? "lovable"} onValueChange={(v) => setForm((f) => ({ ...f, ai_provider: v, ...(v === 'ollama' ? { ai_base_url: 'http://127.0.0.1:11434/v1', ai_model: 'llama3.2:3b', ai_api_key: '' } : f.ai_provider === 'ollama' ? { ai_base_url: 'https://api.openai.com/v1', ai_model: 'gpt-4o-mini' } : {}) }))}>
+              <SelectTrigger aria-label="Provedor de IA"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="lovable">IA integrada (sem chave)</SelectItem>
                 <SelectItem value="openai">OpenAI</SelectItem>
+                <SelectItem value="ollama">Ollama · IA na sua VPS</SelectItem>
                 <SelectItem value="custom">Outro compatível (OpenRouter, Groq, DeepSeek…)</SelectItem>
               </SelectContent>
             </Select>
@@ -169,15 +170,16 @@ function KeysPage() {
             </p>
           ) : (
             <>
-              <Field label="URL base" hint="OpenAI: https://api.openai.com/v1">
+              <Field label="URL base" hint={form.ai_provider === 'ollama' ? 'Local na VPS: http://127.0.0.1:11434/v1' : 'OpenAI: https://api.openai.com/v1'}>
                 <Input value={form.ai_base_url ?? ""} onChange={set("ai_base_url")} />
               </Field>
-              <Field label="API Key">
+              {form.ai_provider !== 'ollama' && <Field label="API Key">
                 <Input type="password" value={form.ai_api_key ?? ""} onChange={set("ai_api_key")} placeholder="sk-..." />
-              </Field>
-              <Field label="Modelo" hint="Ex.: gpt-4o-mini">
+              </Field>}
+              <Field label="Modelo" hint={form.ai_provider === 'ollama' ? 'Ex.: llama3.2:3b' : 'Ex.: gpt-4o-mini'}>
                 <Input value={form.ai_model ?? ""} onChange={set("ai_model")} />
               </Field>
+              {form.ai_provider === 'ollama' && <p className="text-sm text-muted-foreground">Sem créditos OpenAI ou Lovable para as respostas. Requer Ollama instalado na mesma VPS; não funciona nesta prévia. O servidor e o WhatsApp continuam com seus próprios custos.</p>}
             </>
           )}
           <Button onClick={() => save()} disabled={saving}>Salvar</Button>
