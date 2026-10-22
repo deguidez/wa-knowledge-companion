@@ -15,6 +15,7 @@
 
 # Atendimento pelo Lovable
 - [ ] Adicionar tempo editável de inatividade (2 minutos) e verificar reinício sem contexto anterior.
+- [ ] Perguntar se precisa de mais ajuda após 30 segundos sem resposta, antes do encerramento.
 - [x] Fazer “sair” no WhatsApp reiniciar a escolha da empresa — verificado na função real, com menu e contexto anterior excluído.
 - [x] Verificar configuração e falhas recentes da Evolution e IA — conexão aberta e teste da IA respondeu.
 - [x] Corrigir entrega da Evolution para o Lovable — somente MESSAGES_UPSERT, por eventos e Base64 desligados; configuração conferida após salvar.
