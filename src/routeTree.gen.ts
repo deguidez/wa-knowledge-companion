@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAgenteRouteImport } from './routes/_authenticated/agente'
 import { Route as AuthenticatedChavesRouteImport } from './routes/_authenticated/chaves'
+import { Route as AuthenticatedConhecimentoRouteImport } from './routes/_authenticated/conhecimento'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +42,17 @@ const AuthenticatedChavesRoute = AuthenticatedChavesRouteImport.update({
   path: '/chaves',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConhecimentoRoute =
+  AuthenticatedConhecimentoRouteImport.update({
+    id: '/conhecimento',
+    path: '/conhecimento',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicEvolutionWebhookRoute =
   ApiPublicEvolutionWebhookRouteImport.update({
     id: '/api/public/evolution/webhook',
@@ -52,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/agente': typeof AuthenticatedAgenteRoute
   '/chaves': typeof AuthenticatedChavesRoute
+  '/conhecimento': typeof AuthenticatedConhecimentoRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -59,6 +74,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/agente': typeof AuthenticatedAgenteRoute
   '/chaves': typeof AuthenticatedChavesRoute
+  '/conhecimento': typeof AuthenticatedConhecimentoRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRoutesById {
@@ -68,14 +85,29 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/agente': typeof AuthenticatedAgenteRoute
   '/_authenticated/chaves': typeof AuthenticatedChavesRoute
+  '/_authenticated/conhecimento': typeof AuthenticatedConhecimentoRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/api/public/evolution/webhook': typeof ApiPublicEvolutionWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/agente' | '/chaves' | '/api/public/evolution/webhook'
+    | '/'
+    | '/auth'
+    | '/agente'
+    | '/chaves'
+    | '/conhecimento'
+    | '/dashboard'
+    | '/api/public/evolution/webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/agente' | '/chaves' | '/api/public/evolution/webhook'
+  to:
+    | '/'
+    | '/auth'
+    | '/agente'
+    | '/chaves'
+    | '/conhecimento'
+    | '/dashboard'
+    | '/api/public/evolution/webhook'
   id:
     | '__root__'
     | '/'
@@ -83,6 +115,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/agente'
     | '/_authenticated/chaves'
+    | '/_authenticated/conhecimento'
+    | '/_authenticated/dashboard'
     | '/api/public/evolution/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -130,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChavesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/conhecimento': {
+      id: '/_authenticated/conhecimento'
+      path: '/conhecimento'
+      fullPath: '/conhecimento'
+      preLoaderRoute: typeof AuthenticatedConhecimentoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/evolution/webhook': {
       id: '/api/public/evolution/webhook'
       path: '/api/public/evolution/webhook'
@@ -143,11 +191,15 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgenteRoute: typeof AuthenticatedAgenteRoute
   AuthenticatedChavesRoute: typeof AuthenticatedChavesRoute
+  AuthenticatedConhecimentoRoute: typeof AuthenticatedConhecimentoRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAgenteRoute: AuthenticatedAgenteRoute,
   AuthenticatedChavesRoute: AuthenticatedChavesRoute,
+  AuthenticatedConhecimentoRoute: AuthenticatedConhecimentoRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
