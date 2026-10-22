@@ -23,24 +23,26 @@ function FlowPage() {
   const qc = useQueryClient();
   const [flow, setFlow] = useState<CompanyFlow>();
   const [saving, setSaving] = useState(false);
+  const [timeoutMinutes, setTimeoutMinutes] = useState(2);
   const [preview, setPreview] = useState<string>('menu');
-  useEffect(() => { if (data) setFlow(readFlow(data.routing_flow)); }, [data]);
+  useEffect(() => { if (data) { setFlow(readFlow(data.routing_flow)); setTimeoutMinutes(data.conversation_timeout_minutes); } }, [data]);
   if (!flow) return <div className="p-8 text-muted-foreground">{error ? 'Não foi possível carregar o fluxo.' : 'Carregando…'}</div>;
   const edit = (key: 'greeting' | 'menu_title' | 'other_message', value: string) => setFlow({ ...flow, [key]: value });
   const branch = (company: Company, key: 'label' | 'welcome' | 'instructions', value: string) => setFlow({ ...flow, [company]: { ...flow[company], [key]: value } });
-  const valid = [flow.greeting, flow.menu_title, flow.other_message, ...companies.flatMap(c => Object.values(flow[c]))].every(s => s.trim().length > 0);
+  const valid = Number.isInteger(timeoutMinutes) && timeoutMinutes >= 1 && [flow.greeting, flow.menu_title, flow.other_message, ...companies.flatMap(c => Object.values(flow[c]))].every(s => s.trim().length > 0);
   return <div>
     <PageHeader title="Fluxo de atendimento" subtitle="Pace 3 Eventos Esportivos · Associação Pace 3" />
     <div className="grid gap-8 p-8 max-md:p-4 xl:grid-cols-[minmax(0,1fr)_340px]">
       <form className="min-w-0 space-y-6" onSubmit={async e => {
         e.preventDefault(); if (!valid) return;
         setSaving(true);
-        try { await saveSettings({ routing_flow: flow as unknown as Json }); await qc.invalidateQueries({ queryKey: ['settings'] }); toast.success('Fluxo salvo'); }
+        try { await saveSettings({ routing_flow: flow as unknown as Json, conversation_timeout_minutes: timeoutMinutes }); await qc.invalidateQueries({ queryKey: ['settings'] }); toast.success('Fluxo salvo'); }
         catch (e) { toast.error(e instanceof Error ? e.message : 'Não foi possível salvar'); } finally { setSaving(false); }
       }}>
         <div className="flex items-center gap-2 text-primary"><GitBranch className="h-5 w-5" /><h2 className="font-semibold">Início do atendimento</h2></div>
         <div className="space-y-2"><Label htmlFor="greeting">Mensagem inicial</Label><Textarea id="greeting" rows={3} value={flow.greeting} onChange={e => edit('greeting', e.target.value)} required /></div>
         <div className="space-y-2"><Label htmlFor="menu-title">Título das opções</Label><Input id="menu-title" value={flow.menu_title} onChange={e => edit('menu_title', e.target.value)} required /></div>
+        <div className="space-y-2"><Label htmlFor="timeout-minutes">Encerrar após inatividade (minutos)</Label><Input id="timeout-minutes" type="number" min={1} step={1} value={Number.isNaN(timeoutMinutes) ? '' : timeoutMinutes} onChange={e => setTimeoutMinutes(e.target.valueAsNumber)} required /></div>
         <ArrowDown className="mx-auto h-5 w-5 text-muted-foreground" />
         <div className="grid gap-4 lg:grid-cols-2">{companies.map((c, i) => <section key={c} className="min-w-0 space-y-4 rounded-lg border bg-card p-5">
           <h2 className="font-semibold text-primary">Opção {i + 1}</h2>
