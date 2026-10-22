@@ -127,6 +127,9 @@ export type Database = {
           system_prompt: string
           updated_at: string
           webhook_token: string
+          whatsapp_provider: string
+          ycloud_api_key: string
+          ycloud_from: string
         }
         Insert: {
           agent_name?: string
@@ -142,6 +145,9 @@ export type Database = {
           system_prompt?: string
           updated_at?: string
           webhook_token?: string
+          whatsapp_provider?: string
+          ycloud_api_key?: string
+          ycloud_from?: string
         }
         Update: {
           agent_name?: string
@@ -157,6 +163,9 @@ export type Database = {
           system_prompt?: string
           updated_at?: string
           webhook_token?: string
+          whatsapp_provider?: string
+          ycloud_api_key?: string
+          ycloud_from?: string
         }
         Relationships: []
       }
