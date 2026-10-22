@@ -29,6 +29,13 @@
       "when": 1792632629159,
       "tag": "0003_company_routing_flow",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792637253825,
+      "tag": "0004_whatsapp_sair_resets_company",
+      "breakpoints": true
     }
   ]
 }
