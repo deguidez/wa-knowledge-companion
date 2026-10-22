@@ -1,5 +1,25 @@
 # Publicar na VPS (aaPanel) — gpt.evenon.com.br
 
+## Instalação assistida por script
+
+1. No aaPanel, instale/ative **Node.js 22 ou superior** e confirme que `node -v` no terminal mostra a versão correta. O instalador exige Linux com systemd e execução como root.
+2. Exporte o **projeto completo atualizado** pelo GitHub/download e envie os arquivos para `/www/wwwroot/gpt.evenon.com.br`. A pasta deve conter `package.json`, `vite.config.ts`, `src`, `scripts` e o `.env` original com as configurações públicas do Lovable Cloud. Não compartilhe esse `.env` no chat e não substitua arquivos de um site existente sem backup.
+3. No terminal do aaPanel, verifique sem instalar:
+   ```bash
+   bash /www/wwwroot/gpt.evenon.com.br/scripts/instalar-vps.sh --check /www/wwwroot/gpt.evenon.com.br
+   ```
+4. Execute a instalação e confirme digitando `INSTALAR`:
+   ```bash
+   bash /www/wwwroot/gpt.evenon.com.br/scripts/instalar-vps.sh /www/wwwroot/gpt.evenon.com.br
+   ```
+   Se Ollama ainda não existir, o script baixa seu instalador oficial para `/tmp`, pede que você o revise em outro terminal, e só o executa após digitar `OLLAMA`.
+
+O script instala as dependências do projeto, compila para Node, configura PM2 para iniciar após reiniciar a VPS, configura Ollama em acesso local, baixa `llama3.2:3b` e testa o aplicativo e a IA. Pode demorar e usar recursos do servidor. Em caso de erro, para imediatamente; as etapas anteriores não são desfeitas. Pode ser executado novamente após corrigir o erro. Não atualiza o código automaticamente.
+
+**Ainda precisa fazer no aaPanel:** DNS do domínio, site com proxy `http://127.0.0.1:3000`, certificado SSL e HTTPS (seções 1 e 7). Não abra as portas 3000 e 11434. Depois selecione Ollama na página Chaves de API, salve e teste as duas empresas (seção 9); configure também o webhook do seu provedor WhatsApp. O instalador não altera a escolha de IA nem ativa respostas automáticas.
+
+**Login, dados e arquivos permanecem no Lovable Cloud**; o script instala na VPS apenas o aplicativo e a IA local. Não exige chave privada do banco. A instalação real precisa ser executada na sua VPS; testes deste arquivo não substituem a validação no seu servidor.
+
 ## 1. DNS
 No seu provedor de domínio, crie um registro **A**: `gpt` → IP da VPS.
 
