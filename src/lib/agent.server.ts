@@ -2,6 +2,9 @@
 export type AgentSettings = {
   agent_name: string;
   system_prompt: string;
+  whatsapp_provider?: string;
+  ycloud_api_key?: string;
+  ycloud_from?: string;
   evolution_url: string;
   evolution_api_key: string;
   evolution_instance: string;
@@ -103,6 +106,23 @@ export async function callAI(
   const reply = json?.choices?.[0]?.message?.content;
   if (!reply || typeof reply !== "string") throw new Error("A IA não retornou texto");
   return reply.trim();
+}
+
+export async function sendWhatsApp(s: AgentSettings, phone: string, text: string) {
+  if (s.whatsapp_provider === "ycloud") return sendYCloud(s, phone, text);
+  return sendEvolution(s, phone, text);
+}
+
+export async function sendYCloud(s: AgentSettings, phone: string, text: string) {
+  if (!s.ycloud_api_key || !s.ycloud_from) throw new Error("YCloud não configurada");
+  const from = s.ycloud_from.startsWith("+") ? s.ycloud_from : "+" + s.ycloud_from;
+  const res = await fetch("https://api.ycloud.com/v2/whatsapp/messages/sendDirectly", {
+    method: "POST",
+    headers: { "X-API-Key": s.ycloud_api_key, "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to: "+" + phone.replace(/\D/g, ""), type: "text", text: { body: text } }),
+  });
+  const body = await res.text();
+  if (!res.ok) throw new Error(`YCloud respondeu ${res.status}: ${body.slice(0, 300)}`);
 }
 
 export async function sendEvolution(s: AgentSettings, phone: string, text: string) {

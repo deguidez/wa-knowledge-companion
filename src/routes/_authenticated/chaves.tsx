@@ -47,6 +47,9 @@ function KeysPage() {
     setSaving(true);
     try {
       await saveSettings({
+        whatsapp_provider: form.whatsapp_provider ?? "evolution",
+        ycloud_api_key: (form.ycloud_api_key ?? "").trim(),
+        ycloud_from: (form.ycloud_from ?? "").replace(/[^\d+]/g, ""),
         evolution_url: (form.evolution_url ?? "").trim(),
         evolution_api_key: (form.evolution_api_key ?? "").trim(),
         evolution_instance: (form.evolution_instance ?? "").trim(),
@@ -65,21 +68,44 @@ function KeysPage() {
     }
   }
 
+  const isY = form.whatsapp_provider === "ycloud";
   return (
     <div>
-      <PageHeader title="Chaves de API" subtitle="Conecte a Evolution API e escolha a IA que vai responder." />
+      <PageHeader title="Chaves de API" subtitle="Conecte o WhatsApp e escolha a IA que vai responder." />
       <div className="grid gap-6 p-8 max-md:p-4 lg:grid-cols-2">
         <section className="space-y-4 rounded-2xl border bg-card p-6">
-          <h2 className="text-lg font-semibold">Evolution API (WhatsApp)</h2>
-          <Field label="URL do servidor" hint="Ex.: https://evolution.seudominio.com.br">
-            <Input value={form.evolution_url ?? ""} onChange={set("evolution_url")} placeholder="https://..." />
+          <h2 className="text-lg font-semibold">WhatsApp</h2>
+          <Field label="Provedor">
+            <Select value={form.whatsapp_provider ?? "evolution"} onValueChange={(v) => setForm((f) => ({ ...f, whatsapp_provider: v }))}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="evolution">Evolution API</SelectItem>
+                <SelectItem value="ycloud">YCloud (API oficial)</SelectItem>
+              </SelectContent>
+            </Select>
           </Field>
-          <Field label="API Key">
-            <Input type="password" value={form.evolution_api_key ?? ""} onChange={set("evolution_api_key")} />
-          </Field>
-          <Field label="Nome da instância">
-            <Input value={form.evolution_instance ?? ""} onChange={set("evolution_instance")} />
-          </Field>
+          {isY ? (
+            <>
+              <Field label="API Key da YCloud" hint="YCloud → Developers → API Keys">
+                <Input type="password" value={form.ycloud_api_key ?? ""} onChange={set("ycloud_api_key")} />
+              </Field>
+              <Field label="Número do WhatsApp (remetente)" hint="Com DDI, ex.: +5511999999999">
+                <Input value={form.ycloud_from ?? ""} onChange={set("ycloud_from")} placeholder="+55..." />
+              </Field>
+            </>
+          ) : (
+            <>
+              <Field label="URL do servidor" hint="Ex.: https://evolution.seudominio.com.br">
+                <Input value={form.evolution_url ?? ""} onChange={set("evolution_url")} placeholder="https://..." />
+              </Field>
+              <Field label="API Key">
+                <Input type="password" value={form.evolution_api_key ?? ""} onChange={set("evolution_api_key")} />
+              </Field>
+              <Field label="Nome da instância">
+                <Input value={form.evolution_instance ?? ""} onChange={set("evolution_instance")} />
+              </Field>
+            </>
+          )}
           <div className="flex gap-2">
             <Button onClick={() => save()} disabled={saving}>Salvar</Button>
             <Button
@@ -97,7 +123,11 @@ function KeysPage() {
             </Button>
           </div>
           <div className="space-y-2 border-t pt-4">
-            <Label>Webhook (cole na Evolution, evento MESSAGES_UPSERT)</Label>
+            <Label>
+              {isY
+                ? "Webhook (YCloud → Developers → Webhooks, evento whatsapp.inbound_message.received)"
+                : "Webhook (cole na Evolution, evento MESSAGES_UPSERT)"}
+            </Label>
             <div className="flex gap-2">
               <Input readOnly value={webhook} className="font-mono text-xs" />
               <Button size="icon" variant="secondary" onClick={() => { navigator.clipboard.writeText(webhook); toast.success("Copiado"); }}>

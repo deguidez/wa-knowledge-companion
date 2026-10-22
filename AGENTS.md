@@ -14,4 +14,5 @@
 - The public webhook writes through token-checked SECURITY DEFINER RPCs (`webhook_ingest`, `webhook_record_reply`) using the publishable key, so it works on any host.
 - Single admin: first signup becomes admin via trigger; all tables are admin-only through `has_role` RLS.
 - File text extraction (PDF/DOCX) runs in the browser; server only fetches URLs.
+- WhatsApp provider (Evolution or YCloud) is chosen in settings; one webhook route detects either payload format and `sendWhatsApp` dispatches.
 - AI calls use OpenAI-compatible `/chat/completions` so any provider key works; built-in AI needs `LOVABLE_API_KEY` in the env.
